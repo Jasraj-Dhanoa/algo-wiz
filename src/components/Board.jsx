@@ -3,7 +3,7 @@ import Node from "./Node";
 import "./styles/board.css";
 import aStar from "../algorithms/astar";
 
-const END = [9, 9];
+const END = [4, 19];
 
 class Board extends Component {
   constructor(props) {
