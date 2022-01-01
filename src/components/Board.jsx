@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Node from "./Node";
 import "./styles/board.css";
+import aStar from "../algorithms/astar";
 
-const START = [0, 0];
 const END = [9, 9];
 
 class Board extends Component {
@@ -11,12 +11,67 @@ class Board extends Component {
     this.state = {
       board: [],
     };
+    this.visualizePath = this.visualizePath.bind(this);
+    this.makeNodeWall = this.makeNodeWall.bind(this);
+  }
+
+  makeNodeWall(row, col, wall) {
+    const node = this.state.board[row][col];
+    this.setNodeState(node, "isWall", !wall);
   }
 
   componentDidMount() {
-    const createdBoard = createGrid(this.props.rows, this.props.cols);
+    const createdBoard = createGrid(
+      this.props.rows,
+      this.props.cols,
+      [0, 0],
+      END
+    );
     console.log(createdBoard);
     this.setState({ board: createdBoard });
+  }
+
+  visualizePath() {
+    const { board } = this.state;
+    const startNode = board[0][0];
+    const endNode = board[END[0]][END[1]];
+    const [path, nodesVisited] = aStar(
+      board,
+      startNode,
+      endNode,
+      this.props.rows - 1,
+      this.props.cols - 1
+    );
+    console.log(path);
+    if (path) {
+      nodesVisited.forEach((node, i) => {
+        setTimeout(() => {
+          this.setNodeState(node, "isExplored", true);
+          if (i === path.length) {
+            path.forEach((node, i) => {
+              setTimeout(() => {
+                this.setNodeState(node, "isVisited", true);
+              }, i * 150);
+            });
+          }
+        }, i * 50);
+      });
+    } else {
+      nodesVisited.forEach((node, i) => {
+        setTimeout(() => {
+          this.setNodeState(node, "isExplored", true);
+        }, i * 50);
+      });
+      console.log("path could not be found");
+    }
+  }
+
+  setNodeState(node, property, status) {
+    let board = [...this.state.board];
+    let updateNode = { ...board[node.row][node.col] };
+    updateNode[property] = status;
+    board[node.row][node.col] = updateNode;
+    this.setState({ board: board });
   }
 
   render() {
@@ -24,7 +79,8 @@ class Board extends Component {
     const nodes = board.map((row, index) => (
       <div key={index} className="boardRow">
         {row.map((node) => {
-          const { row, col, isVisited, isStart, isEnd } = node;
+          const { row, col, isVisited, isStart, isEnd, isWall, isExplored } =
+            node;
           return (
             <Node
               key={row + "" + col}
@@ -33,6 +89,9 @@ class Board extends Component {
               isVisited={isVisited}
               isStart={isStart}
               isEnd={isEnd}
+              isWall={isWall}
+              isExplored={isExplored}
+              changeWall={this.makeNodeWall}
             />
           );
         })}
@@ -45,12 +104,15 @@ class Board extends Component {
         <h1>Cols: {this.props.cols}</h1>
         <h1>Rows: {this.props.rows}</h1>
         <div>{nodes}</div>
+        <button className="visualizeBtn" onClick={this.visualizePath}>
+          Visualize
+        </button>
       </div>
     );
   }
 }
 
-function createGrid(rows, cols) {
+function createGrid(rows, cols, start, end) {
   let board = [];
   for (let i = 0; i < rows; i++) {
     let row = [];
@@ -59,13 +121,17 @@ function createGrid(rows, cols) {
         row: i,
         col: j,
         isVisited: false,
-        isStart: i === START[0] && j === START[1] ? true : false,
-        isEnd: i === END[0] && j === END[1] ? true : false,
+        isStart: i === start[0] && j === start[1] ? true : false,
+        isEnd: i === end[0] && j === end[1] ? true : false,
+        isWall: Math.random() <= 0.25 ? true : false,
+        isExplored: false,
       };
       row.push(node);
     }
     board.push(row);
   }
+  board[end[0]][end[1]].isWall = false;
+  board[start[0]][start[1]].isWall = false;
   return board;
 }
 

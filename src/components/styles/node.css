@@ -14,6 +14,18 @@
   background-color: lightblue;
 }
 
+.visited {
+  background-color: rgb(210, 31, 60);
+}
+
+.wall {
+  background-color: black;
+}
+
+.explored {
+  background-color: pink;
+}
+
 p {
   font-size: small;
 }
