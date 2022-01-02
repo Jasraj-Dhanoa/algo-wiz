@@ -1,1 +1,4 @@
-1. Cooler Animations
+1. Form
+2. Styling/Layout
+3. Animations
+4. Wall Selection Feature

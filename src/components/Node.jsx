@@ -4,6 +4,10 @@ import "./styles/node.css";
 function Node(props) {
   return props.isVisited ? (
     <div className="node visited">Visited</div>
+  ) : props.isEnd ? (
+    <div className="node" id="end">
+      End
+    </div>
   ) : props.isExplored ? (
     <div className="node explored">Explored</div>
   ) : props.isWall ? (
@@ -16,10 +20,6 @@ function Node(props) {
   ) : props.isStart ? (
     <div className="node" id="start">
       Start
-    </div>
-  ) : props.isEnd ? (
-    <div className="node" id="end">
-      End
     </div>
   ) : (
     <div

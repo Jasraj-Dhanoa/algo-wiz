@@ -3,7 +3,7 @@ import Node from "./Node";
 import "./styles/board.css";
 import aStar from "../algorithms/astar";
 
-const END = [4, 19];
+const END = [7, 19];
 
 class Board extends Component {
   constructor(props) {
@@ -47,11 +47,11 @@ class Board extends Component {
       nodesVisited.forEach((node, i) => {
         setTimeout(() => {
           this.setNodeState(node, "isExplored", true);
-          if (i === path.length) {
+          if (i === nodesVisited.length - 1) {
             path.forEach((node, i) => {
               setTimeout(() => {
                 this.setNodeState(node, "isVisited", true);
-              }, i * 150);
+              }, i * 80);
             });
           }
         }, i * 50);
@@ -60,9 +60,11 @@ class Board extends Component {
       nodesVisited.forEach((node, i) => {
         setTimeout(() => {
           this.setNodeState(node, "isExplored", true);
+          if (i === nodesVisited.length - 1) {
+            console.log("NO PATH FOUND");
+          }
         }, i * 50);
       });
-      console.log("path could not be found");
     }
   }
 
@@ -100,7 +102,6 @@ class Board extends Component {
 
     return (
       <div>
-        <h1>Hello World!</h1>
         <h1>Cols: {this.props.cols}</h1>
         <h1>Rows: {this.props.rows}</h1>
         <div>{nodes}</div>
@@ -136,3 +137,10 @@ function createGrid(rows, cols, start, end) {
 }
 
 export default Board;
+
+//Path Visualizer
+// path.forEach((node, i) => {
+//   setTimeout(() => {
+//     this.setNodeState(node, "isVisited", true);
+//   }, i * 200);
+// });
