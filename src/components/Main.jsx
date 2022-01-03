@@ -1,12 +1,11 @@
 import React from "react";
 import Board from "./Board";
-import Form from "./Form";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Main() {
   return (
     <div>
-      <Form />;
-      <Board rows="8" cols="20" />
+      <Board rows="12" cols="27" />
     </div>
   );
 }

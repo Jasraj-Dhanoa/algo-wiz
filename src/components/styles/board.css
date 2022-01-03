@@ -16,3 +16,34 @@
   margin: 4px 2px;
   cursor: pointer;
 }
+
+#navbar {
+  margin-bottom: 5vh;
+  background-color: #211469;
+  padding-top: 1vh;
+}
+
+#title {
+  color: whitesmoke;
+  margin-top: 1vh;
+  margin-bottom: 2vh;
+}
+
+#button {
+  margin-top: 0.6vh;
+  background-color: #e75147;
+  border-color: #e75147;
+  color: rgb(255, 255, 255);
+}
+
+#button-main {
+  margin-top: 0.6vh;
+  background-color: #12ca99;
+  border-color: #12ca99;
+  color: rgb(255, 255, 255);
+}
+
+#board {
+  display: flex;
+  justify-content: center;
+}

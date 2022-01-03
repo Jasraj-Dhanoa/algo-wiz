@@ -2,39 +2,36 @@ import React, { Component } from "react";
 import Node from "./Node";
 import "./styles/board.css";
 import aStar from "../algorithms/astar";
-
-const END = [7, 19];
+import Button from "react-bootstrap/Button";
+import { Container, Nav, Row, Col } from "react-bootstrap";
 
 class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
       board: [],
+      visualizeRunning: false,
     };
     this.visualizePath = this.visualizePath.bind(this);
     this.makeNodeWall = this.makeNodeWall.bind(this);
-  }
-
-  makeNodeWall(row, col, wall) {
-    const node = this.state.board[row][col];
-    this.setNodeState(node, "isWall", !wall);
+    this.clearPath = this.clearPath.bind(this);
   }
 
   componentDidMount() {
-    const createdBoard = createGrid(
-      this.props.rows,
-      this.props.cols,
-      [0, 0],
-      END
-    );
+    const { rows, cols } = this.props;
+
+    const createdBoard = createGrid(rows, cols, [0, 0], [rows - 1, cols - 1]);
     console.log(createdBoard);
     this.setState({ board: createdBoard });
   }
 
   visualizePath() {
+    this.setState({ visualizeRunning: true });
     const { board } = this.state;
+    const { speed } = this.props;
+    console.log(speed);
     const startNode = board[0][0];
-    const endNode = board[END[0]][END[1]];
+    const endNode = board[this.props.rows - 1][this.props.cols - 1];
     const [path, nodesVisited] = aStar(
       board,
       startNode,
@@ -43,6 +40,8 @@ class Board extends Component {
       this.props.cols - 1
     );
     console.log(path);
+    this.clearPath("isExplored");
+    this.clearPath("isVisited");
     if (path) {
       nodesVisited.forEach((node, i) => {
         setTimeout(() => {
@@ -51,19 +50,23 @@ class Board extends Component {
             path.forEach((node, i) => {
               setTimeout(() => {
                 this.setNodeState(node, "isVisited", true);
+                if (i === path.length - 1) {
+                  this.setState({ visualizeRunning: false });
+                }
               }, i * 80);
             });
           }
-        }, i * 50);
+        }, i * 60);
       });
     } else {
       nodesVisited.forEach((node, i) => {
         setTimeout(() => {
           this.setNodeState(node, "isExplored", true);
           if (i === nodesVisited.length - 1) {
-            console.log("NO PATH FOUND");
+            window.alert("No Path Could Be Found! Try with Another Grid.");
+            this.setState({ visualizeRunning: false });
           }
-        }, i * 50);
+        }, i * 60);
       });
     }
   }
@@ -74,6 +77,25 @@ class Board extends Component {
     updateNode[property] = status;
     board[node.row][node.col] = updateNode;
     this.setState({ board: board });
+  }
+
+  clearPath(property) {
+    let board = [...this.state.board];
+    board = board.map((row) => {
+      row.map((node) => {
+        node[property] = false;
+        return node;
+      });
+      return row;
+    });
+    this.setState({ board: board });
+    console.log("BOARD");
+    console.log(board);
+  }
+
+  makeNodeWall(row, col, wall) {
+    const node = this.state.board[row][col];
+    this.setNodeState(node, "isWall", !wall);
   }
 
   render() {
@@ -102,12 +124,65 @@ class Board extends Component {
 
     return (
       <div>
-        <h1>Cols: {this.props.cols}</h1>
-        <h1>Rows: {this.props.rows}</h1>
-        <div>{nodes}</div>
-        <button className="visualizeBtn" onClick={this.visualizePath}>
-          Visualize
-        </button>
+        <Nav defaultActiveKey="/home" as="ul" id="navbar">
+          <Container>
+            <Row>
+              <Col xs={8}>
+                <Nav.Item as="li">
+                  <h3 id="title">A-Star Pathfinding Visualizer</h3>
+                </Nav.Item>
+              </Col>
+              <Col>
+                <Nav.Item as="li">
+                  <Button
+                    id="button"
+                    variant="primary"
+                    onClick={() => {
+                      window.location.reload();
+                    }}
+                  >
+                    New Grid
+                  </Button>
+                </Nav.Item>
+              </Col>
+              <Col>
+                <Nav.Item as="li">
+                  <Button
+                    id="button"
+                    variant="primary"
+                    onClick={
+                      this.state.visualizeRunning
+                        ? null
+                        : () => {
+                            this.clearPath("isExplored");
+                            this.clearPath("isVisited");
+                            this.clearPath("isWall");
+                          }
+                    }
+                  >
+                    Clear Walls
+                  </Button>
+                </Nav.Item>
+              </Col>
+              <Col>
+                <Nav.Item as="li">
+                  <Button
+                    id="button-main"
+                    variant="primary"
+                    onClick={
+                      this.state.visualizeRunning ? null : this.visualizePath
+                    }
+                  >
+                    Visualize
+                  </Button>
+                </Nav.Item>
+              </Col>
+            </Row>
+          </Container>
+        </Nav>
+        <div id="board">
+          <div>{nodes}</div>
+        </div>
       </div>
     );
   }
@@ -137,10 +212,3 @@ function createGrid(rows, cols, start, end) {
 }
 
 export default Board;
-
-//Path Visualizer
-// path.forEach((node, i) => {
-//   setTimeout(() => {
-//     this.setNodeState(node, "isVisited", true);
-//   }, i * 200);
-// });

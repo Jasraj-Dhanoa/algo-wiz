@@ -2,35 +2,39 @@ import React from "react";
 import "./styles/node.css";
 
 function Node(props) {
-  return props.isVisited ? (
-    <div className="node visited">Visited</div>
-  ) : props.isEnd ? (
-    <div className="node" id="end">
-      End
-    </div>
-  ) : props.isExplored ? (
-    <div className="node explored">Explored</div>
-  ) : props.isWall ? (
+  const {
+    row,
+    col,
+    isVisited,
+    isStart,
+    isEnd,
+    isWall,
+    isExplored,
+    changeWall,
+  } = props;
+
+  const status = isVisited
+    ? "visited"
+    : isEnd
+    ? "end"
+    : isStart
+    ? "start"
+    : isExplored
+    ? "explored"
+    : isWall
+    ? "wall"
+    : "";
+
+  return (
     <div
-      className="node wall"
-      onMouseDown={() => props.changeWall(props.row, props.col, true)}
-    >
-      Wall
-    </div>
-  ) : props.isStart ? (
-    <div className="node" id="start">
-      Start
-    </div>
-  ) : (
-    <div
-      onMouseDown={() => props.changeWall(props.row, props.col, false)}
-      className="node"
-    >
-      Node
-    </div>
+      className={"node " + status}
+      onMouseDown={
+        isWall || status === ""
+          ? () => changeWall(row, col, isWall ? true : false)
+          : null
+      }
+    ></div>
   );
 }
-
-//isExplored
 
 export default Node;
