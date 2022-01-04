@@ -24,6 +24,23 @@
 
 .explored {
   background-color: #06d6a0;
+  animation-name: fillIn;
+  animation-duration: 1.3s;
+}
+
+@keyframes fillIn {
+  0% {
+    background-color: #94b0e6;
+  }
+  25% {
+    background-color: #3e7beb;
+  }
+  50% {
+    background-color: #3eebc6;
+  }
+  100% {
+    background-color: #10e2aa;
+  }
 }
 
 p {
