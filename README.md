@@ -10,4 +10,3 @@ A-Star Visualizer is a A* pathfinding algorithm visualizaiton application. Users
 ## Notes/Sources
 
 1. This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-2. https://en.wikipedia.org/wiki/A*_search_algorithm
