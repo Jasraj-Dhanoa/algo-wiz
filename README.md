@@ -3,7 +3,7 @@
 A-Star Visualizer is a A* pathfinding algorithm visualizaiton application.
 
 # Technologies Used
- Markup : 1. JavaScript (React.js and Node.js)
+1. JavaScript (React.js and Node.js)
           2. HTML5
           3. CSS (Bootstrap)
           
