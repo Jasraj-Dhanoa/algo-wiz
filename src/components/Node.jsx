@@ -27,6 +27,7 @@ function Node(props) {
 
   return (
     <div
+      onMouseUp={() => props.mouseEvent("up")}
       className={"node " + status}
       onMouseDown={
         isWall || status === ""

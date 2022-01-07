@@ -15,6 +15,7 @@ class Board extends Component {
     this.visualizePath = this.visualizePath.bind(this);
     this.makeNodeWall = this.makeNodeWall.bind(this);
     this.clearPath = this.clearPath.bind(this);
+    this.mouseEvent = this.mouseEvent.bind(this);
   }
 
   componentDidMount() {
@@ -98,6 +99,10 @@ class Board extends Component {
     this.setNodeState(node, "isWall", !wall);
   }
 
+  mouseEvent(msg) {
+    console.log(msg);
+  }
+
   render() {
     const board = this.state.board;
     const nodes = board.map((row, index) => (
@@ -116,6 +121,7 @@ class Board extends Component {
               isWall={isWall}
               isExplored={isExplored}
               changeWall={this.makeNodeWall}
+              mouseEvent={this.mouseEvent}
             />
           );
         })}
